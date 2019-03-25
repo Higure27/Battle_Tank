@@ -19,11 +19,17 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 private:
 
 	ATank * GetControlledTank() const;
 
 	ATank * GetPlayerTank() const;
+
+	ATank * targetTank = nullptr;
+
+	ATank * possesedTank = nullptr;
 	
 	
 };

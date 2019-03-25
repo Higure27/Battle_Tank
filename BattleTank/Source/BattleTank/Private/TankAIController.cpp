@@ -2,11 +2,12 @@
 
 #include "TankAIController.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	ATank* possesedTank = GetControlledTank();
+	possesedTank = GetControlledTank();
 	if (possesedTank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s is the AI possesed tank"), *(possesedTank->GetName()));
@@ -15,15 +16,22 @@ void ATankAIController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AI Possesed tank was NOT FOUND"));
 	}
-	ATank* playerTank = GetPlayerTank();
-	if (playerTank)
+	targetTank = GetPlayerTank();
+	if (targetTank)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" AI Tank found %s is the player possesed tank"), *(playerTank->GetName()));
+		UE_LOG(LogTemp, Warning, TEXT(" AI Tank found %s is the player possesed tank"), *(targetTank->GetName()));
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player Possesed tank was NOT FOUND"));
 	}
+}
+
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	possesedTank->AimAt(targetTank->GetActorLocation());
+
 }
 
 ATank* ATankAIController::GetControlledTank() const
