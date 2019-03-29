@@ -24,12 +24,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AimAt(FVector aimWorldSpaceLocation);
+	void AimAt(FVector aimWorldSpaceLocation, float launchSpeed);
 
 	void SetBarrelReference(UStaticMeshComponent* barrelToRefer);
+
+	//TODO: Add set turret ref
 
 private:
 
 	UStaticMeshComponent* barrel = nullptr;
+
+	void MoveBarrelTowards(FVector aimDirection);
 	
 };

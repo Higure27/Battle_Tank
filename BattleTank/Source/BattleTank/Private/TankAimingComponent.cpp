@@ -3,6 +3,7 @@
 #include "TankAimingComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -34,14 +35,48 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation)
+void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpeed)
 {
-	FString aimingTank = GetOwner()->GetName();
-	FString berralLocationString = barrel->GetComponentLocation().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s"), *aimingTank, *aimWorldSpaceLocation.ToString(),*berralLocationString);
+	if (!barrel)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Barrel not found"));
+		return;
+	}
+	FVector outLaunchVelocity;
+	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
+
+	//Calculate launch velocity
+
+	bool bFoundProjectileDirection = UGameplayStatics::SuggestProjectileVelocity(this, outLaunchVelocity, startLocation, aimWorldSpaceLocation,
+		launchSpeed, false, 10.f, .0f, ESuggestProjVelocityTraceOption::DoNotTrace);
+	
+	if (bFoundProjectileDirection)
+	{
+		//Get direction as unit vector(takes out magnitude) 
+		FVector aimDirection = outLaunchVelocity.GetSafeNormal();
+		FString tankName = GetOwner()->GetName();
+		//UE_LOG(LogTemp, Warning, TEXT("%s Firing at the direction: %s"), *tankName,*aimDirection.ToString());
+		MoveBarrelTowards(aimDirection);
+	}
+	//else do nothing
 }
 
 void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* barrelToRefer)
 {
 	barrel = barrelToRefer;
+}
+
+//Takes in the aim direction vector and move tank barrel accordingly
+void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
+{
+	// Get barrel rotation 
+	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
+	FRotator aimAsRotator = aimDirection.Rotation();
+	//Difference in rotation between barrel and aim rotation
+	FRotator DeltaRotator = aimAsRotator - barrelRotator;
+	UE_LOG(LogTemp, Warning, TEXT("%s Rotation needed"), *DeltaRotator.ToString());
+
+
+	//Move barrel  into new position 
+	//TODO:Create UTankBarrelClass for barrel movment
 }

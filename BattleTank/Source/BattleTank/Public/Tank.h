@@ -16,23 +16,26 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	void AimAt(FVector aimLocation);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent *tankAimingComponent = nullptr;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void AimAt(FVector aimLocation);
-
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UStaticMeshComponent* barrelToRefer);
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float launchSpeed = 100000.f; // 1000 m/s TODO: Find logical default
 
 	
 	
