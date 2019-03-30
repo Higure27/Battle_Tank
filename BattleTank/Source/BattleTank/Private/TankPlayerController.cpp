@@ -35,7 +35,7 @@ void ATankPlayerController::AimTowardsCrossHair()
 
 	FVector hitLocation;
 	
-	if (GetSightHitLocation(&hitLocation))
+	if (GetSightHitLocation(hitLocation))
 	{
 
 		//Tell controlled tank to aim at that point
@@ -47,7 +47,7 @@ void ATankPlayerController::AimTowardsCrossHair()
 
 //Get world location of linetrace through crosshair
 //if it hits through the landscape return true
-bool ATankPlayerController::GetSightHitLocation(FVector * outHitLocation) const
+bool ATankPlayerController::GetSightHitLocation(FVector& outHitLocation) const
 {
 	//*outHitLocation = FVector(1.0f);
 	//Find the crosshair position
@@ -60,7 +60,7 @@ bool ATankPlayerController::GetSightHitLocation(FVector * outHitLocation) const
 	if (GetLookDirection(dotScreenLocation, lookDirection))
 	{
 		
-		if (GetLookVectorHitLocation(lookDirection, *outHitLocation)) { return true; }
+		if (GetLookVectorHitLocation(lookDirection, outHitLocation)) { return true; }
 	}
 	
 	return false;

@@ -28,7 +28,7 @@ private:
 	///Aim the tank barrel towards the crosshair, where the crosshair intersects with the world
 	void AimTowardsCrossHair();
 
-	bool GetSightHitLocation(FVector * outHitLocation) const;
+	bool GetSightHitLocation(FVector& outHitLocation) const;
 
 	bool GetLookDirection(FVector2D screenLocation, FVector& lookDirection) const;
 

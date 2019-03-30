@@ -7,6 +7,8 @@
 #include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
+class UTankBarrel;
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -15,9 +17,6 @@ class BATTLETANK_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	void AimAt(FVector aimLocation);
 
@@ -32,7 +31,7 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UStaticMeshComponent* barrelToRefer);
+	void SetBarrelReference(UTankBarrel* barrelToRefer);
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float launchSpeed = 100000.f; // 1000 m/s TODO: Find logical default
