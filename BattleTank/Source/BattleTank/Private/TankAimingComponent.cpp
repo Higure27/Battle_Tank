@@ -40,7 +40,7 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 		FString tankName = GetOwner()->GetName();
 		MoveBarrelTowards(aimDirection);
 		auto currentTime = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f :Found aim solution"), currentTime);
+		//UE_LOG(LogTemp, Warning, TEXT("%f :Found aim solution"), currentTime);
 	}
 	else
 	{
@@ -62,11 +62,11 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimAsRotator = aimDirection.Rotation();
 	//Difference in rotation between barrel and aim rotation
-	FRotator DeltaRotator = aimAsRotator - barrelRotator;
+	FRotator deltaRotator = aimAsRotator - barrelRotator;
 	
 
 
 	//Move barrel  into new position 
-	barrel->Elevate(1.0f);
-	//TODO:Create UTankBarrelClass for barrel movment
+	barrel->Elevate(deltaRotator.Pitch);
+	
 }
