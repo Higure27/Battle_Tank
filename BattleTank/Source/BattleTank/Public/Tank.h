@@ -9,6 +9,7 @@
 //Forward declerations
 class UTankAimingComponent;
 class UTankBarrel;
+class UTankTurret;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -34,8 +35,11 @@ private:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* barrelToRefer);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* turrretToRefer);
+
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float launchSpeed = 100000.f; // 1000 m/s TODO: Find logical default
+	float launchSpeed = 5000.f;
 
 	
 	

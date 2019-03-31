@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 
 // Sets default values for this component's properties
@@ -25,6 +26,12 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 		UE_LOG(LogTemp, Error, TEXT("Barrel not found"));
 		return;
 	}
+
+	if (!turret)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Turret not found"));
+		return;
+	}
 	FVector outLaunchVelocity;
 	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
 
@@ -39,7 +46,7 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 		FVector aimDirection = outLaunchVelocity.GetSafeNormal();
 		FString tankName = GetOwner()->GetName();
 		MoveBarrelTowards(aimDirection);
-		auto currentTime = GetWorld()->GetTimeSeconds();
+		
 		//UE_LOG(LogTemp, Warning, TEXT("%f :Found aim solution"), currentTime);
 	}
 	else
@@ -55,6 +62,11 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToRefer)
 	barrel = barrelToRefer;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* turretToRefer)
+{
+	turret = turretToRefer;
+}
+
 //Takes in the aim direction vector and move tank barrel accordingly
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 {
@@ -68,5 +80,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 
 	//Move barrel  into new position 
 	barrel->Elevate(deltaRotator.Pitch);
+	turret->Rotate(deltaRotator.Yaw);
 	
 }
