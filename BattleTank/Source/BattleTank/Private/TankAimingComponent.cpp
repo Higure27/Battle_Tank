@@ -13,7 +13,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;// TODO: Check if TAC should tick
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -49,21 +49,19 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 		
 		//UE_LOG(LogTemp, Warning, TEXT("%f :Found aim solution"), currentTime);
 	}
-	else
-	{
-		auto currentTime = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f : NO aim solution"), currentTime);
-	}
 	//else do nothing
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToRefer)
 {
+	if (!barrelToRefer) { return; }
+
 	barrel = barrelToRefer;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* turretToRefer)
 {
+	if (!turretToRefer) { return; }
 	turret = turretToRefer;
 }
 

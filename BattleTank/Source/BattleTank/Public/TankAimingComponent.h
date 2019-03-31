@@ -34,8 +34,5 @@ private:
 	UTankTurret* turret = nullptr;
 
 	void MoveBarrelTowards(FVector aimDirection);
-
-	//TODO: Add move turret function (calls TankTurret->rotate)
-	//void MoveTurretTowrads(FVector aimDirection);
 	
 };

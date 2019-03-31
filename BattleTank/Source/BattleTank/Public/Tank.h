@@ -22,6 +22,9 @@ public:
 
 	void AimAt(FVector aimLocation);
 
+	UFUNCTION(BlueprintCallable,Category = Controls)
+	void Fire();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
