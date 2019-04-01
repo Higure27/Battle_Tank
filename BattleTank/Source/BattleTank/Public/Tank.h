@@ -51,5 +51,8 @@ private:
 	//Local barrel reference for firing projectile
 	UTankBarrel* barrel = nullptr;
 	
-	
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float reloadTimeInSeconds = 3.f;
+
+	double lastFiredTime = 0;
 };

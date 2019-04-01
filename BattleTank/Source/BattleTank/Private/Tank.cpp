@@ -40,13 +40,20 @@ void ATank::Fire()
 {
 	if (!barrel) { return; }
 
-	FVector projectileLocation = barrel->GetSocketLocation(FName("Projectile"));
-	FRotator projectileRotation = barrel->GetSocketRotation(FName("Projectile"));
-	
-	//Spawn a projectile at the socket location on the barrel
-	AProjectile* firedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileBP, projectileLocation, projectileRotation);
+	bool bIsReloaded = (GetWorld()->GetTimeSeconds() - lastFiredTime) > reloadTimeInSeconds;
 
-	firedProjectile->LaunchProjectile(launchSpeed);
+	if (bIsReloaded)
+	{
+		FVector projectileLocation = barrel->GetSocketLocation(FName("Projectile"));
+		FRotator projectileRotation = barrel->GetSocketRotation(FName("Projectile"));
+
+		//Spawn a projectile at the socket location on the barrel
+		AProjectile* firedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileBP, projectileLocation, projectileRotation);
+
+		lastFiredTime = GetWorld()->GetTimeSeconds();
+		firedProjectile->LaunchProjectile(launchSpeed);
+	}
+
 }
 
 void ATank::SetBarrelReference(UTankBarrel* barrelToRefer)
