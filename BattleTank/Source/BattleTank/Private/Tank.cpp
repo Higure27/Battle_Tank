@@ -21,6 +21,8 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+
+	lastFiredTime = GetWorld()->GetTimeSeconds();
 	
 }
 
