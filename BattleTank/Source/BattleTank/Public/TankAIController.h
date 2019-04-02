@@ -25,13 +25,10 @@ public:
 
 private:
 
-	ATank * GetControlledTank() const;
-
-	ATank * GetPlayerTank() const;
-
 	ATank * targetTank = nullptr;
 
 	ATank * possesedTank = nullptr;
 	
-	
+	//How close the AI tank can get to the player 
+	float acceptanceRadius = 5000;
 };
