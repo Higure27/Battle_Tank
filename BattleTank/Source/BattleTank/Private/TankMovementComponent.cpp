@@ -5,8 +5,6 @@
 
 void UTankMovementComponent::initialize(UTankTrack* rightTrackToRef, UTankTrack* leftTrackToRef)
 {
-	
-
 	rightTrack = rightTrackToRef;
 	leftTrack = leftTrackToRef;
 }
@@ -37,7 +35,6 @@ void UTankMovementComponent::IntendMoveForward(float controlThrow)
 	rightTrack->SetThrottle(controlThrow);
 	leftTrack->SetThrottle(controlThrow);
 
-	//TODO: prevent use of trigers and joysticks at same time
 }
 
 void UTankMovementComponent::IntendTurnRight(float controlThrow)
@@ -47,11 +44,8 @@ void UTankMovementComponent::IntendTurnRight(float controlThrow)
 		UE_LOG(LogTemp, Error, TEXT("Either left or right tracks were not found"))
 			return;
 	}
-	//FString tankName = GetOwner()->GetName();
-	//UE_LOG(LogTemp, Warning, TEXT("%s throw is %f"), *tankName, controlThrow);
+
 	rightTrack->SetThrottle(-controlThrow);
 	leftTrack->SetThrottle(controlThrow);
-
-	//TODO: prevent use of trigers and joysticks at same time
 }
 
