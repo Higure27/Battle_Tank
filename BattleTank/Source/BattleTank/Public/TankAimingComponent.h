@@ -30,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void initialize(UTankBarrel* barrelToRef, UTankTurret* turretToRef);
 
-	void AimAt(FVector aimWorldSpaceLocation, float launchSpeed);
+	void AimAt(FVector aimWorldSpaceLocation);
 
 	//void SetBarrelReference(UTankBarrel* barrelToRefer);
 
@@ -46,6 +46,9 @@ private:
 	UTankBarrel* barrel = nullptr;
 
 	UTankTurret* turret = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	float launchSpeed = 5000.f;
 
 	void MoveBarrelTowards(FVector aimDirection);
 

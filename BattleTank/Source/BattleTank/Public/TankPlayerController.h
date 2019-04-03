@@ -7,7 +7,6 @@
 #include "TankPlayerController.generated.h"
 
 //Forward declerations:
-class ATank;
 class UTankAimingComponent;
 
 /**
@@ -26,13 +25,12 @@ public:
 
 protected:
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	ATank * GetControlledTank() const;
-
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UTankAimingComponent* aimCompRef);
 
 private:
+
+	UTankAimingComponent* aimingComponent = nullptr;
 
 	///Aim the tank barrel towards the crosshair, where the crosshair intersects with the world
 	void AimTowardsCrossHair();

@@ -7,7 +7,7 @@
 #include "TankAIController.generated.h"
 
 //Forward declerations:
-class ATank;
+class UTankAimingComponent;
 
 /**
  * 
@@ -25,9 +25,9 @@ public:
 
 private:
 
-	ATank * targetTank = nullptr;
+	APawn * targetTank = nullptr;
 
-	ATank * possesedTank = nullptr;
+	UTankAimingComponent * aimingComponent = nullptr;
 	
 	//How close the AI tank can get to the player 
 	float acceptanceRadius = 5000;

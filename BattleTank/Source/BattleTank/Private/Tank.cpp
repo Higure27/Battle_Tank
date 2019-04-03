@@ -23,9 +23,6 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 
 	lastFiredTime = GetWorld()->GetTimeSeconds();
-
-	tankAimingComponent = FindComponentByClass<UTankAimingComponent>();
-	
 }
 
 // Called to bind functionality to input
@@ -33,17 +30,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
-
-void ATank::AimAt(FVector aimLocation)
-{	
-	if (!ensure(tankAimingComponent))
-	{
-		//UE_LOG(LogTemp, Error, TEXT("Tank: Tank aiming component not found"));
-		return;
-	}
-	//Needs launchSpeed for proper firing 
-	tankAimingComponent->AimAt(aimLocation,launchSpeed);
 }
 
 void ATank::Fire()

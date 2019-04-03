@@ -2,7 +2,7 @@
 
 #include "TankAIController.h"
 #include "GameFramework/Actor.h"
-#include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 //Depends on movement component through pathfinding (MoveToActor -> RequestDirectMove)
 
@@ -11,22 +11,14 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 
 	//Get pointer to this tank
-	possesedTank = Cast<ATank>(GetPawn());
-	if (ensure(possesedTank))
+	aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(aimingComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is the AI possesed tank"), *(possesedTank->GetName()));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("AI Possesed tank was NOT FOUND"));
+		UE_LOG(LogTemp, Error, TEXT("AI Aiming component NOT FOUND"));
 	}
 	//Find player's tank
-	targetTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (ensure(targetTank))
-	{
-		UE_LOG(LogTemp, Warning, TEXT(" AI Tank found %s is the player possesed tank"), *(targetTank->GetName()));
-	}
-	else
+	targetTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (!ensure(targetTank))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player Possesed tank was NOT FOUND"));
 	}
@@ -36,15 +28,18 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!ensure(aimingComponent)) { return; }
+
 	if (ensure(targetTank))
 	{
 		MoveToActor(targetTank, acceptanceRadius);
-		possesedTank->AimAt(targetTank->GetActorLocation());
-		possesedTank->Fire();
+		aimingComponent->AimAt(targetTank->GetActorLocation());
+		//TODO Refector Fire to Aiming Component
+		//possesedTank->Fire();
 	}
 	else
 	{
-		targetTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		targetTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 	}
 
 

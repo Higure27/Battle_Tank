@@ -1,30 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	ATank* possesedTank = GetControlledTank();
-	if (ensure(possesedTank))
+
+	aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (aimingComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is the Player possesed tank"), *(possesedTank->GetName()));
-		UTankAimingComponent* aimingComponent = possesedTank->FindComponentByClass<UTankAimingComponent>();
-		if (aimingComponent)
-		{
-			this->FoundAimingComponent(aimingComponent);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("TankPlayerController: Aiming Component NOT FOUND"))
-		}
+		this->FoundAimingComponent(aimingComponent);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Player possesed tank was NOT FOUND"));
+		UE_LOG(LogTemp, Error, TEXT("TankPlayerController: Aiming Component NOT FOUND"))
 	}
 }
 
@@ -35,14 +26,13 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimTowardsCrossHair()
 {
-	if (!ensure(GetControlledTank())) { return; }
+	if (!ensure(aimingComponent))
+	{
+		aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+		return;
+	}
 
 	FVector hitLocation;
 	
@@ -50,7 +40,7 @@ void ATankPlayerController::AimTowardsCrossHair()
 	{
 
 		//Tell controlled tank to aim at that point
-		GetControlledTank()->AimAt(hitLocation);
+		aimingComponent->AimAt(hitLocation);
 	}
 	
 
