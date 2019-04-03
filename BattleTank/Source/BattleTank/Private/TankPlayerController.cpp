@@ -30,6 +30,7 @@ void ATankPlayerController::AimTowardsCrossHair()
 {
 	if (!ensure(aimingComponent))
 	{
+		if (!GetPawn()) { return; }//player tank is not possesed
 		aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 		return;
 	}
