@@ -26,7 +26,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
 void UTankMovementComponent::IntendMoveForward(float controlThrow)
 {
-	if (!rightTrack || !leftTrack)
+	if (!ensure(rightTrack && leftTrack))
 	{ 
 		UE_LOG(LogTemp, Error, TEXT("Either left or right tracks were not found"))
 		return;
@@ -39,10 +39,10 @@ void UTankMovementComponent::IntendMoveForward(float controlThrow)
 
 void UTankMovementComponent::IntendTurnRight(float controlThrow)
 {
-	if (!rightTrack || !leftTrack)
+	if (!ensure(rightTrack && leftTrack))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Either left or right tracks were not found"))
-			return;
+		return;
 	}
 
 	rightTrack->SetThrottle(-controlThrow);

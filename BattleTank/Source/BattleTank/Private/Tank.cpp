@@ -14,7 +14,7 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	tankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Tank Aiming Component"));
+	//tankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Tank Aiming Component"));
 
 }
 
@@ -35,13 +35,19 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 void ATank::AimAt(FVector aimLocation)
-{	//needs launchSpeed for proper firing 
+{	
+	if (!ensure(tankAimingComponent))
+	{
+		//UE_LOG(LogTemp, Error, TEXT("Tank: Tank aiming component not found"));
+		return;
+	}
+	//Needs launchSpeed for proper firing 
 	tankAimingComponent->AimAt(aimLocation,launchSpeed);
 }
 
 void ATank::Fire()
 {
-	if (!barrel) { return; }
+	if (!ensure(barrel)) { return; }
 
 	bool bIsReloaded = (GetWorld()->GetTimeSeconds() - lastFiredTime) > reloadTimeInSeconds;
 
@@ -61,11 +67,11 @@ void ATank::Fire()
 
 void ATank::SetBarrelReference(UTankBarrel* barrelToRefer)
 {
-	tankAimingComponent->SetBarrelReference(barrelToRefer);
+	//tankAimingComponent->SetBarrelReference(barrelToRefer);
 	barrel = barrelToRefer;
 }
 
-void ATank::SetTurretReference(UTankTurret* turrretToRefer)
+/*void ATank::SetTurretReference(UTankTurret* turrretToRefer)
 {
 	tankAimingComponent->SetTurretReference(turrretToRefer);
-}
+}*/

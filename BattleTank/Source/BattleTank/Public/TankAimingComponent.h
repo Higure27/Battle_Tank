@@ -32,14 +32,14 @@ public:
 
 	void AimAt(FVector aimWorldSpaceLocation, float launchSpeed);
 
-	void SetBarrelReference(UTankBarrel* barrelToRefer);
+	//void SetBarrelReference(UTankBarrel* barrelToRefer);
 
-	void SetTurretReference(UTankTurret* turretToRefer);
+	//void SetTurretReference(UTankTurret* turretToRefer);
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFIRINGSTATUS currentFiringStatus;
+	EFIRINGSTATUS currentFiringStatus = EFIRINGSTATUS::Aiming;
 
 private:
 

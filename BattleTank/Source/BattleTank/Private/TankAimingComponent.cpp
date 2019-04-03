@@ -17,7 +17,7 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 	
 	// ...
-	currentFiringStatus = EFIRINGSTATUS::Reloading;
+	//currentFiringStatus = EFIRINGSTATUS::Aiming;
 }
 
 void UTankAimingComponent::initialize(UTankBarrel* barrelToRef, UTankTurret* turretToRef)
@@ -28,13 +28,13 @@ void UTankAimingComponent::initialize(UTankBarrel* barrelToRef, UTankTurret* tur
 
 void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpeed)
 {
-	if (!barrel)
+	if (!ensure(barrel))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Barrel not found"));
 		return;
 	}
 
-	if (!turret)
+	if (!ensure(!turret))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Turret not found"));
 		return;
@@ -59,7 +59,7 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 	//else do nothing
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToRefer)
+/*void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToRefer)
 {
 	if (!barrelToRefer) { return; }
 
@@ -70,11 +70,16 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* turretToRefer)
 {
 	if (!turretToRefer) { return; }
 	turret = turretToRefer;
-}
+}*/
 
 //Takes in the aim direction vector and move tank barrel accordingly
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
-{
+{	
+	if (!ensure(barrel && turret))
+	{
+		UE_LOG(LogTemp, Error, TEXT("either barrel or turret were not found"));
+		return;
+	}
 	// Get barrel rotation 
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
 	FRotator aimAsRotator = aimDirection.Rotation();

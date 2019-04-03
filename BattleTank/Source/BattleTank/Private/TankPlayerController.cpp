@@ -2,15 +2,25 @@
 
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	ATank* possesedTank = GetControlledTank();
-	if (possesedTank)
+	if (ensure(possesedTank))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s is the Player possesed tank"), *(possesedTank->GetName()));
+		UTankAimingComponent* aimingComponent = possesedTank->FindComponentByClass<UTankAimingComponent>();
+		if (aimingComponent)
+		{
+			this->FoundAimingComponent(aimingComponent);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("TankPlayerController: Aiming Component NOT FOUND"))
+		}
 	}
 	else
 	{
@@ -32,7 +42,7 @@ ATank* ATankPlayerController::GetControlledTank() const
 
 void ATankPlayerController::AimTowardsCrossHair()
 {
-	if (!GetControlledTank()) { return; }
+	if (!ensure(GetControlledTank())) { return; }
 
 	FVector hitLocation;
 	
