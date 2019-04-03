@@ -42,8 +42,10 @@ public:
 
 protected:
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFIRINGSTATUS currentFiringStatus = EFIRINGSTATUS::Aiming;
+	EFIRINGSTATUS currentFiringStatus = EFIRINGSTATUS::Reloading;
 
 private:
 
@@ -62,8 +64,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> projectileBP;
 
+	FVector aimDirection;
+
 	void MoveBarrelTowards(FVector aimDirection);
 
-	
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+	bool IsBarrelMoving();
 	
 };
