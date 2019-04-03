@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Tank.h"
 #include "Engine/World.h"
+//Depends on movement component through pathfinding (MoveToActor -> RequestDirectMove)
 
 void ATankAIController::BeginPlay()
 {

@@ -8,7 +8,6 @@
 
 //Forward declerations
 class UTankAimingComponent;
-class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
@@ -34,8 +33,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UTankAimingComponent *tankAimingComponent = nullptr;
 
-	UPROPERTY(BlueprintReadOnly)
-	UTankMovementComponent *tankMovmentComponent = nullptr;
 
 private:
 	// Called to bind functionality to input

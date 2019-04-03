@@ -34,7 +34,7 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation, float launchSpee
 		return;
 	}
 
-	if (!ensure(!turret))
+	if (!ensure(turret))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Turret not found"));
 		return;
