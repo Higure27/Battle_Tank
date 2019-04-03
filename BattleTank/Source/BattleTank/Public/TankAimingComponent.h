@@ -9,6 +9,7 @@
 // Forward decleration
 class UTankBarrel; 
 class UTankTurret;
+class AProjectile;
 
 UENUM()
 enum class EFIRINGSTATUS :uint8
@@ -32,6 +33,9 @@ public:
 
 	void AimAt(FVector aimWorldSpaceLocation);
 
+	UFUNCTION(BlueprintCallable, Category = "Controls")
+	void Fire();
+
 	//void SetBarrelReference(UTankBarrel* barrelToRefer);
 
 	//void SetTurretReference(UTankTurret* turretToRefer);
@@ -49,6 +53,14 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Firing")
 	float launchSpeed = 5000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	float reloadTimeInSeconds = 3.f;
+
+	double lastFiredTime = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	TSubclassOf<AProjectile> projectileBP;
 
 	void MoveBarrelTowards(FVector aimDirection);
 

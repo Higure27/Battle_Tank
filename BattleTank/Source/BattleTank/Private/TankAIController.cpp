@@ -34,8 +34,7 @@ void ATankAIController::Tick(float DeltaTime)
 	{
 		MoveToActor(targetTank, acceptanceRadius);
 		aimingComponent->AimAt(targetTank->GetActorLocation());
-		//TODO Refector Fire to Aiming Component
-		//possesedTank->Fire();
+		aimingComponent->Fire();
 	}
 	else
 	{
