@@ -16,7 +16,8 @@ enum class EFIRINGSTATUS :uint8
 {
 	Reloading,
 	Aiming,
-	LockedOn
+	LockedOn,
+	OutOfAmmo
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -36,9 +37,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Controls")
 	void Fire();
 
-	//void SetBarrelReference(UTankBarrel* barrelToRefer);
+	EFIRINGSTATUS GetFiringState() const;
 
-	//void SetTurretReference(UTankTurret* turretToRefer);
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int GetBulletsLeft() const;
 
 protected:
 
@@ -60,6 +62,8 @@ private:
 	float reloadTimeInSeconds = 3.f;
 
 	double lastFiredTime = 0;
+
+	int bulletsLeft = 4;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> projectileBP;

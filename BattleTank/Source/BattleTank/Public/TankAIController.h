@@ -23,12 +23,17 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+
+	//How close the AI tank can get to the player
+	UPROPERTY(EditDefaultsOnly,Category = "Setup")
+	float acceptanceRadius = 7000;
+
 private:
 
 	APawn * targetTank = nullptr;
 
 	UTankAimingComponent * aimingComponent = nullptr;
 	
-	//How close the AI tank can get to the player 
-	float acceptanceRadius = 5000;
+	
 };
