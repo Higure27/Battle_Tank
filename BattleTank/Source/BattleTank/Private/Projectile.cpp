@@ -2,8 +2,13 @@
 
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/Actor.h"
+#include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/DamageType.h"
 
 
 // Sets default values
@@ -26,6 +31,9 @@ AProjectile::AProjectile()
 	hitBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Hit Blast Particle System"));
 	hitBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	hitBlast->bAutoActivate = false;
+
+	explosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	explosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -48,7 +56,20 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 {
 	launchBlast->Deactivate();
 	hitBlast->Activate();
+	explosionForce->FireImpulse();
 
+	SetRootComponent(hitBlast);
+	collisionMesh->DestroyComponent();
+
+	UGameplayStatics::ApplyRadialDamage(this, hitDamage, GetActorLocation(), explosionForce->Radius, UDamageType::StaticClass(),TArray<AActor*>());
+
+	FTimerHandle timer;
+	GetWorld()->GetTimerManager().SetTimer(timer,this, &AProjectile::DestroyProjectile, destroyDelay, false);
+}
+
+void AProjectile::DestroyProjectile()
+{
+	Destroy();
 }
 
 void AProjectile::LaunchProjectile(float speed)

@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 
 class UProjectileMovementComponent;
+class URadialForceComponent;
 
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
@@ -40,7 +41,19 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Firing")
 	UParticleSystemComponent* hitBlast = nullptr;
 
+	//Fires Impulse
+	UPROPERTY(VisibleAnywhere, Category = "Firing")
+	URadialForceComponent* explosionForce = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float destroyDelay = 3.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float hitDamage = 20.f;
+	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
+
+	void DestroyProjectile();
 	
 };
