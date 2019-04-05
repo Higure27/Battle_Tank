@@ -23,7 +23,7 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 	void LaunchProjectile(float speed);
 
@@ -31,6 +31,16 @@ private:
 
 	UProjectileMovementComponent* projectileMovementComponent = nullptr;
 
-	
+	UPROPERTY(VisibleAnywhere, Category = "Firing")
+	UStaticMeshComponent* collisionMesh = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Firing")
+	UParticleSystemComponent* launchBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Firing")
+	UParticleSystemComponent* hitBlast = nullptr;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
 	
 };

@@ -159,7 +159,7 @@ EFIRINGSTATUS UTankAimingComponent::GetFiringState() const
 	return currentFiringStatus;
 }
 
-int UTankAimingComponent::GetBulletsLeft() const
+int32 UTankAimingComponent::GetBulletsLeft() const
 {
 	return bulletsLeft;
 }

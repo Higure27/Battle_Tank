@@ -40,7 +40,7 @@ public:
 	EFIRINGSTATUS GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	int GetBulletsLeft() const;
+	int32 GetBulletsLeft() const;
 
 protected:
 
@@ -63,7 +63,8 @@ private:
 
 	double lastFiredTime = 0;
 
-	int bulletsLeft = 4;
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	int32 bulletsLeft = 4;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> projectileBP;
