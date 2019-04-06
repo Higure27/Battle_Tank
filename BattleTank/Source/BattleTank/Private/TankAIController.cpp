@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
+#include "Tank.h"
 //Depends on movement component through pathfinding (MoveToActor -> RequestDirectMove)
 
 void ATankAIController::BeginPlay()
@@ -45,5 +46,26 @@ void ATankAIController::Tick(float DeltaTime)
 	}
 
 
+}
+
+void ATankAIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if(InPawn)
+	{
+		ATank* possesedTank = Cast<ATank>(InPawn);
+		if (!ensure(possesedTank)) { return; }
+		//Set up listener for OnDeath Event
+		possesedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
+	}
+}
+
+void ATankAIController::OnTankDeath()
+{
+	APawn* possesedTank = GetPawn();
+
+	if (!possesedTank) { return; }
+
+	possesedTank->DetachFromControllerPendingDestroy();
 }
 

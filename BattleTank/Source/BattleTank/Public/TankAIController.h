@@ -34,6 +34,11 @@ private:
 	APawn * targetTank = nullptr;
 
 	UTankAimingComponent * aimingComponent = nullptr;
+
+	//When tank is about to be possesed
+	virtual void SetPawn(APawn* InPawn) override;
 	
+	UFUNCTION() 
+	void OnTankDeath();  
 	
 };

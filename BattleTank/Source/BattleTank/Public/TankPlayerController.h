@@ -28,9 +28,15 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UTankAimingComponent* aimCompRef);
 
+	UFUNCTION()
+	void OnTankDeath();
+
 private:
 
 	UTankAimingComponent* aimingComponent = nullptr;
+
+	//When tank is about to be possesed
+	virtual void SetPawn(APawn* InPawn) override;
 
 	///Aim the tank barrel towards the crosshair, where the crosshair intersects with the world
 	void AimTowardsCrossHair();
@@ -41,6 +47,7 @@ private:
 
 	bool GetLookVectorHitLocation(FVector lookDirection, FVector& outHitLocation) const;
 
+
 	UPROPERTY(EditAnywhere)
 	float crossHairXLocation = .5f;
 
@@ -49,5 +56,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float lineTraceRange = 1000000.f;
+
+	
 };
 

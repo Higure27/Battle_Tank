@@ -14,6 +14,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	currentHealth = startHealth;
 
 }
 
@@ -25,7 +26,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	currentHealth -= damageToApply;
 	if (currentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank is destroyed"));
+		OnDeath.Broadcast();
 	}
 
 	return damageToApply;

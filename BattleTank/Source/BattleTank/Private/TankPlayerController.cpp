@@ -3,6 +3,7 @@
 #include "TankPlayerController.h"
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
+#include "Tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -25,6 +26,25 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimTowardsCrossHair();
 
 }
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn)
+	{
+		ATank* playerTank = Cast<ATank>(InPawn);
+		if (!ensure(playerTank)) { return; }
+		//Set up listener for OnDeath Event
+		playerTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
+	}
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	//Deposses tank
+	StartSpectatingOnly();
+}
+
 
 void ATankPlayerController::AimTowardsCrossHair()
 {
@@ -83,7 +103,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector lookDirection, FVec
 	FVector startVector = PlayerCameraManager->GetCameraLocation();
 	FVector endVector = startVector + lookDirection * lineTraceRange;
 
-	if (GetWorld()->LineTraceSingleByChannel(lineTraceHit, startVector, endVector, ECollisionChannel::ECC_Visibility))
+	if (GetWorld()->LineTraceSingleByChannel(lineTraceHit, startVector, endVector, ECollisionChannel::ECC_Camera))
 	{
 		outHitLocation = lineTraceHit.Location;
 		return true;
@@ -92,3 +112,4 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector lookDirection, FVec
 	outHitLocation = FVector(0.f);
 	return false;
 }
+
