@@ -21,7 +21,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//Force applied on wheel, can be positive or negative
-	void AddDrivingForce(float ForceMagnitude);
+	void AddDrivingForce(float forceMagnitude);
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,6 +42,14 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Spring")
 	UPhysicsConstraintComponent* axleWheelConstraint = nullptr;
 
+	float totalForceMagnitudeInFrame = 0;
+
 	void SetupConstraints();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	void ApplyForce();
+
 	
 };

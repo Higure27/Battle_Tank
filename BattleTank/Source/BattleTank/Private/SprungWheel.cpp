@@ -11,6 +11,8 @@ ASprungWheel::ASprungWheel()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	//Ensures OnHit happens before tick
+	PrimaryActorTick.TickGroup = TG_PostPhysics;
 
 	
 	massAxleConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("Physics Constraint Component"));
@@ -34,7 +36,23 @@ void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Register OnHit events
+	wheel->SetNotifyRigidBodyCollision(true);
+	wheel->OnComponentHit.AddDynamic(this, &ASprungWheel::OnHit);
+
 	SetupConstraints();
+}
+
+// Called every frame
+void ASprungWheel::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (PrimaryActorTick.TickGroup == TG_PostPhysics)
+	{
+		totalForceMagnitudeInFrame = 0;
+	}
+
 }
 
 void ASprungWheel::SetupConstraints()
@@ -48,11 +66,20 @@ void ASprungWheel::SetupConstraints()
 	axleWheelConstraint->SetConstrainedComponents(axle, NAME_None, wheel, NAME_None);
 }
 
-
-// Called every frame
-void ASprungWheel::Tick(float DeltaTime)
+void ASprungWheel::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	Super::Tick(DeltaTime);
-
+	ApplyForce();
 }
 
+//Called by tank tracks
+void ASprungWheel::AddDrivingForce(float forceMagnitude)
+{
+	
+	totalForceMagnitudeInFrame += forceMagnitude;
+}
+
+void ASprungWheel::ApplyForce()
+{
+	//move in the direction the axle is pointing
+	wheel->AddForce(axle->GetForwardVector() * totalForceMagnitudeInFrame);
+}

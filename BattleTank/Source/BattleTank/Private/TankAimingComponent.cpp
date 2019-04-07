@@ -8,6 +8,7 @@
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include "Projectile.h"
+#include "ConstructorHelpers.h"
 
 
 
@@ -17,9 +18,12 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
-	// ...
-	//currentFiringStatus = EFIRINGSTATUS::Aiming;
+
+	ConstructorHelpers::FClassFinder<AProjectile> projectileClassBP(TEXT("/Game/Projectile/Projectile_BP"));
+	if (projectileClassBP.Succeeded())
+	{
+		projectileBP = projectileClassBP.Class;
+	}
 
 }
 

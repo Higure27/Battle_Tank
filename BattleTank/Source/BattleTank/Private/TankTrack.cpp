@@ -2,6 +2,8 @@
 
 #include "TankTrack.h"
 #include "Engine/World.h"
+#include "SprungWheel.h"
+#include "SpawnPointComponent.h"
 
 UTankTrack::UTankTrack()
 {
@@ -11,49 +13,50 @@ UTankTrack::UTankTrack()
 void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
-
-	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
-
-void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
-	
-	SideWaysFriction();
-	currentThrottle = 0;
-}
 
 void UTankTrack::SetThrottle(float throttle)
 {
-	currentThrottle = FMath::Clamp<float>(currentThrottle + throttle, -1.f, 1.f);
-	DriveTrack();
+	float currentThrottle = FMath::Clamp<float>(throttle, -1.f, 1.f);
+	DriveTrack(currentThrottle);
 }
 
-void UTankTrack::DriveTrack()
+void UTankTrack::DriveTrack(float currentThrottle)
 {
-	FVector forceApplied = GetForwardVector() * currentThrottle * trackMaxDrivingForce;
-	FVector forceLocation = GetComponentLocation();
-	//cast to UPrimitiveComponent to apply physic based forces
-	UPrimitiveComponent* tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	tankRoot->AddForceAtLocation(forceApplied, forceLocation);
+	float forceApplied =  currentThrottle * trackMaxDrivingForce;
+	auto trackWheels = GetTrackWheels();
+	int32 numOfWheels = trackWheels.Num();
+	float forcePerWheel = forceApplied / static_cast<float>(numOfWheels);
+	for (ASprungWheel* wheel : trackWheels)
+	{
+		wheel->AddDrivingForce(forcePerWheel);
+	}
+
+
 }
 
-//Simulate sideways friction to minimize tank sliding
-void UTankTrack::SideWaysFriction()
+TArray<ASprungWheel*> UTankTrack::GetTrackWheels() const
 {
-	//The component of speed in the tank right direction
-	//If no slippage should be zero
-	//If sliding entirely sideways, should be speed
-	float slippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
+	TArray <USceneComponent*> childrenSpawnPoints;
+	TArray<ASprungWheel*> trackWheels;
 
-	float deltaTime = GetWorld()->DeltaTimeSeconds;
-	//Required opposing acceleration in this frame
-	FVector correctingAcceleration = -slippageSpeed / deltaTime * GetRightVector();
+	GetChildrenComponents(true, childrenSpawnPoints);
 
-	UStaticMeshComponent * tankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
-	//calculate and applay sideways force
-	FVector correctingForce = correctingAcceleration * tankRoot->GetMass() / 2;//2 Tank tracks
+	for (USceneComponent* spawnPoint : childrenSpawnPoints)
+	{
+		USpawnPointComponent* castedSpawnPoint = Cast<USpawnPointComponent>(spawnPoint);
+		if (!castedSpawnPoint) { continue; }
 
-	tankRoot->AddForce(correctingForce);
+		AActor* spawnedActor = castedSpawnPoint->GetSpawnedActor();
+		
+		ASprungWheel* wheelToAdd = Cast<ASprungWheel>(spawnedActor);
+		if (wheelToAdd)
+		{
+			trackWheels.Add(wheelToAdd);
+		}
+	}
+
+	return trackWheels;
 }
 
