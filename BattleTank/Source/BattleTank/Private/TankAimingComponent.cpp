@@ -20,6 +20,7 @@ UTankAimingComponent::UTankAimingComponent()
 	
 	// ...
 	//currentFiringStatus = EFIRINGSTATUS::Aiming;
+
 }
 
 void UTankAimingComponent::initialize(UTankBarrel* barrelToRef, UTankTurret* turretToRef)
@@ -102,7 +103,7 @@ void UTankAimingComponent::AimAt(FVector aimWorldSpaceLocation)
 }
 
 //Takes in the aim direction vector and move tank barrel accordingly
-void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
+void UTankAimingComponent::MoveBarrelTowards(FVector givenAimDirection)
 {	
 	if (!ensure(barrel && turret))
 	{
@@ -111,7 +112,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 	}
 	// Get barrel rotation 
 	FRotator barrelRotator = barrel->GetForwardVector().Rotation();
-	FRotator aimAsRotator = aimDirection.Rotation();
+	FRotator aimAsRotator = givenAimDirection.Rotation();
 	//Difference in rotation between barrel and aim rotation
 	FRotator deltaRotator = aimAsRotator - barrelRotator;
 	

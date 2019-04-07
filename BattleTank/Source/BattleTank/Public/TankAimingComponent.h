@@ -59,19 +59,19 @@ private:
 	float launchSpeed = 5000.f;
 
 	UPROPERTY(EditAnywhere, Category = "Firing")
-	float reloadTimeInSeconds = 3.f;
+	float reloadTimeInSeconds = 1.5f;
 
 	double lastFiredTime = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Firing")
-	int32 bulletsLeft = 4;
+	int32 bulletsLeft = 20;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> projectileBP;
 
 	FVector aimDirection;
 
-	void MoveBarrelTowards(FVector aimDirection);
+	void MoveBarrelTowards(FVector givenAimDirection);
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
